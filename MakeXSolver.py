@@ -2,13 +2,13 @@ MOD = 2**61-1 #適当な大きい素数
 def inv(x):
     return pow(x, MOD-2, MOD)
 class Formula:
-    def __init__(self, used_bit, x, left_formula=None, right_formula=None, operand=None):
+    def __init__(self, used_bit, x, left_formula=None, right_formula=None, operator=None):
         self.used_bit = used_bit
         self.x = x % MOD
         self.left_formula = left_formula
         self.right_formula = right_formula
-        self.operand = operand
-        self.has_multi_terms = operand is not None and operand in '+-'
+        self.operator = operator
+        self.has_multi_terms = operator is not None and operator in '+-'
     def add(self, right_formula):
         assert (self.used_bit & right_formula.used_bit) == 0
         return Formula(self.used_bit|right_formula.used_bit, self.x + right_formula.x, self, right_formula, '+')
@@ -27,15 +27,15 @@ class Formula:
             return str(self.x)
         # 余計な括弧はつけないぞという謎のこだわりポイント
         _left = str(self.left_formula)
-        left = '({})'.format(_left) if self.left_formula.has_multi_terms and self.operand in '*/' else _left
+        left = '({})'.format(_left) if self.left_formula.has_multi_terms and self.operator in '*/' else _left
         _right = str(self.right_formula)
         if self.right_formula.has_multi_terms:
-            right = '({})'.format(_right) if self.right_formula.has_multi_terms and self.operand != '+' else _right
+            right = '({})'.format(_right) if self.right_formula.has_multi_terms and self.operator != '+' else _right
         else:
-            right = '({})'.format(_right) if self.right_formula.has_multi_terms and self.operand == '/' \
+            right = '({})'.format(_right) if self.right_formula.has_multi_terms and self.operator == '/' \
                 and self.right_formula.left_formula is not None \
-                or self.right_formula.operand == '/' else _right
-        return '{}{}{}'.format(left, self.operand, right)
+                or self.right_formula.operator == '/' else _right
+        return '{}{}{}'.format(left, self.operator, right)
 
 class MakeXSolver:
     def __init__(self, A, X):
