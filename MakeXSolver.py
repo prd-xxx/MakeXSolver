@@ -43,22 +43,13 @@ class MakeXSolver:
         self.A = A
         self.X = X
         self.N = len(A)
-    @staticmethod
-    def popcnt(n):
-        c = (n & 0x5555555555555555) + ((n >> 1) & 0x5555555555555555)
-        c = (c & 0x3333333333333333) + ((c >> 2) & 0x3333333333333333)
-        c = (c & 0x0f0f0f0f0f0f0f0f) + ((c >> 4) & 0x0f0f0f0f0f0f0f0f)
-        c = (c & 0x00ff00ff00ff00ff) + ((c >> 8) & 0x00ff00ff00ff00ff)
-        c = (c & 0x0000ffff0000ffff) + ((c >> 16) & 0x0000ffff0000ffff)
-        c = (c & 0x00000000ffffffff) + ((c >> 32) & 0x00000000ffffffff)
-        return c
     def solve(self):
         # results[s][x] には、集合sに含まれる要素i番目のA[i]をすべて使ってxを作る作り方を高々1つ格納していく
         results = [{} for _ in range(1<<self.N)]
         for i,a in enumerate(self.A):
             results[1<<i][a] = Formula(1<<i, a)
         for s in range(1,1<<self.N):
-            if self.popcnt(s) <= 1: continue
+            if bin(s).count('1') <= 1: continue
             #sの部分集合tを列挙し、u=s\t との組み合わせで作れる結果をすべて results[s]に入れる
             t = s
             while t:
