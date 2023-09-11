@@ -8,6 +8,7 @@ class Formula:
         self.left_formula = left_formula
         self.right_formula = right_formula
         self.operand = operand
+        self.has_multi_terms = operand is not None and operand in '+-'
     def add(self, right_formula):
         assert (self.used_bit & right_formula.used_bit) == 0
         return Formula(self.used_bit|right_formula.used_bit, self.x + right_formula.x, self, right_formula, '+')
@@ -24,8 +25,17 @@ class Formula:
     def __str__(self):
         if self.left_formula is None:
             return str(self.x)
+        # 余計な括弧はつけないぞという謎のこだわりポイント
+        _left = str(self.left_formula)
+        left = '({})'.format(_left) if self.left_formula.has_multi_terms and self.operand in '*/' else _left
+        _right = str(self.right_formula)
+        if self.right_formula.has_multi_terms:
+            right = '({})'.format(_right) if self.right_formula.has_multi_terms and self.operand != '+' else _right
         else:
-            return str('({}{}{})'.format(str(self.left_formula), self.operand, str(self.right_formula)))
+            right = '({})'.format(_right) if self.right_formula.has_multi_terms and self.operand == '/' \
+                and self.right_formula.left_formula is not None \
+                or self.right_formula.operand == '/' else _right
+        return '{}{}{}'.format(left, self.operand, right)
 
 class MakeXSolver:
     def __init__(self, A, X):
