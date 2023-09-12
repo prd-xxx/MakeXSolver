@@ -46,7 +46,7 @@ class MakeXSolver:
         results = [{} for _ in range(1<<self.N)]
         for i,a in enumerate(self.A):
             x = Fraction(a)
-            results[1<<i][a] = Formula(1<<i, x)
+            results[1<<i][x] = Formula(1<<i, x)
         for s in range(1,1<<self.N):
             if bin(s).count('1') <= 1: continue
             #sの部分集合tを列挙し、u=s\t との組み合わせで作れる結果をすべて results[s]に入れる
