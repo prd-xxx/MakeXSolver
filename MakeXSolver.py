@@ -68,7 +68,6 @@ class MakeXSolver:
         if self.X in results[-1]:
             print('{}={}'.format(results[-1][X], X))
         else:
-            print('not found')
             print('{} is not found'.format(X))
             print('found results are below')
             for x,f in sorted(results[-1].items()):
