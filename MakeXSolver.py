@@ -69,7 +69,14 @@ class MakeXSolver:
             print('{}={}'.format(results[-1][X], X))
         else:
             print('not found')
-    
+            print('{} is not found'.format(X))
+            print('found results are below')
+            for x,f in sorted(results[-1].items()):
+                if x.denominator==1:
+                    print('{}={}'.format(f, x))
+                else:
+                    print('{}={}/{}'.format(f, x.numerator, x.denominator))
+
 *A,X = list(map(int,input().split()))
 solver = MakeXSolver(A,X)
 solver.solve()
